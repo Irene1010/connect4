@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const result = document.querySelector('#result');
   const player = document.querySelector('#current-player');
   let current = 1;
-
+  var temp=0;
   for(var i=0; i<squares.length; i++)
   (function(index){
     squares[i].onclick = function(){
@@ -14,10 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
           current=2;
           player.innerHTML = current;
         }else if(current===2){
-          squares[index].classList.add("stack");
-          squares[index].classList.add("player-two");
-          current=1;
-          player.innerHTML = current;
+          if(! squares[index].classList.contains("player-one")){
+            squares[index].classList.add("stack");
+            squares[index].classList.add("player-two");
+            current=1;
+            player.innerHTML = current;
+          }
         }
       }else if(index>=35 && index<=41){
         if(current===1){
@@ -26,10 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
           current=2;
           player.innerHTML = current;
         }else if(current===2){
-          squares[index].classList.add("stack");
-          squares[index].classList.add("player-two");
-          current=1;
-          player.innerHTML = current;
+          if(! squares[index].classList.contains("player-one")){
+            squares[index].classList.add("stack");
+            squares[index].classList.add("player-two");
+            current=1;
+            player.innerHTML = current;
+          }
         }
       }else{
         alert("둘 수 없는 곳입니다.");
@@ -38,6 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })(i)
 
   function check(){
+
     const winning = [[0, 1, 2, 3], [41, 40, 39, 38], [7, 8, 9, 10], [34, 33, 32, 31], [14, 15, 16, 17], [27, 26, 25, 24], [21, 22, 23, 24],
         [20, 19, 18, 17], [28, 29, 30, 31], [13, 12, 11, 10], [35, 36, 37, 38], [6, 5, 4, 3], [0, 7, 14, 21], [41, 34, 27, 20],
         [1, 8, 15, 22], [40, 33, 26, 19], [2, 9, 16, 23], [39, 32, 25, 18], [3, 10, 17, 24], [38, 31, 24, 17], [4, 11, 18, 25],
@@ -58,13 +63,37 @@ document.addEventListener('DOMContentLoaded', () => {
       &&sq2.classList.contains("player-one")&&sq3.classList.contains("player-one")){
         //player one이 이긴다.
         result.innerHTML = '플레이어 1이 이겼습니다!';
+        temp=1;
       }else if(sq0.classList.contains("player-two")&&sq1.classList.contains("player-two")
       &&sq2.classList.contains("player-two")&&sq3.classList.contains("player-two")){
         //player two가 이긴다.
         result.innerHTML = '플레이어 2가 이겼습니다!';
+        temp=1;
+      }
+    }
+    if(temp===1){
+      let timer = setTimeout(reset, 3000);
+      temp=0;
+    }
+  }
+
+  function reset(){
+    result.innerHTML = "";
+    for(var i=0; i<squares.length; i++){
+      if(squares[i].classList.contains("stack")){
+        squares[i].classList.remove("stack");
+      }
+      if(squares[i].classList.contains("player-one")){
+        squares[i].classList.remove("player-one");
+      }else if(squares[i].classList.contains("player-two")){
+        squares[i].classList.remove("player-two");
       }
     }
   }
 
   squares.forEach(square => square.addEventListener('click', check));
+  if(temp===1){
+    //squares.forEach(square => square.addEventListener('click', reset));
+  }
+
 })
